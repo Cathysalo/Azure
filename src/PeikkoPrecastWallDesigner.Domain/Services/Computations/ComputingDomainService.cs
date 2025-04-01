@@ -29,7 +29,11 @@ namespace PeikkoPrecastWallDesigner.Domain.Services.Computations
 			double overlap;
 			LayerLoads internalLoads;
 			LayerLoads externalLoads;
-
+   
+                        //----------------------------
+			// Old single hole logic (Cathy added)
+   			//----------------------------
+                        /*
 			if (data.Hole.Position == EHolePosition.Internal)
 			{
 				overlap = HoleOverlap(data.Hole, data.InternalLayer);
@@ -49,6 +53,31 @@ namespace PeikkoPrecastWallDesigner.Domain.Services.Computations
 				overlap = HoleOverlap(data.Hole, data.ExternalLayer);
 				externalLoads = ComputeLayerLoads(data.ExternalLayer, overlap);
 			}
+                        */
+			//-------------------------------
+                        // New mutiple hole logic 
+			//-------------------------------
+   
+                        double internalOverlap = 0;
+			double externalOverlap = 0;
+
+   
+                        foreach (var hole in data.Holes)
+			{
+				if (hole.Position == EHolePosition.Internal)
+					internalOverlap += HoleOverlap(hole, data.InternalLayer);
+				else if (hole.Position == EHolePosition.External)
+					externalOverlap += HoleOverlap(hole, data.ExternalLayer);
+				else
+				{
+					internalOverlap += HoleOverlap(hole, data.InternalLayer);
+					externalOverlap += HoleOverlap(hole, data.ExternalLayer);
+				}
+			}
+
+			internalLoads = ComputeLayerLoads(data.InternalLayer, internalOverlap);
+			externalLoads = ComputeLayerLoads(data.ExternalLayer, externalOverlap);
+   
 			return [internalLoads, externalLoads];
 		}
 	}
