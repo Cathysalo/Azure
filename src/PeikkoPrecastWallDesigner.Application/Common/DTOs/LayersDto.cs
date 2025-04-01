@@ -5,6 +5,6 @@
 		public LayerDto InternalLayer { get; set; }
 		public LayerDto ExternalLayer { get; set; }
 		public double InsulatedLayerThickness { get; set; }
-		public HoleDto Hole { get; set; }
+		public List<HoleDto> Holes { get; set; } // Cathy changed from HoleDto to List<HoleDto>
 	}
 }
